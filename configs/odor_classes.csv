@@ -1,0 +1,111 @@
+odor,class
+methanoic acid,acid
+acetic acid,acid
+propionic acid,acid
+butyric acid,acid
+pentanoic acid,acid
+hexanoic acid,acid
+heptanoic acid,acid
+octanoic acid,acid
+nonanoic acid,acid
+linoleic acid,acid
+isobutyric acid,acid
+isopentanoic acid,acid
+pyruvic acid,acid
+2-ethylhexanoic acid,acid
+lactic acid,acid
+methyl acetate,acetate_ester
+ethyl acetate,acetate_ester
+propyl acetate,acetate_ester
+butyl acetate,acetate_ester
+pentyl acetate,acetate_ester
+hexyl acetate,acetate_ester
+isobutyl acetate,acetate_ester
+isopentyl acetate,acetate_ester
+E2-hexenyl acetate,acetate_ester
+methyl butyrate,other_ester
+ethyl butyrate,other_ester
+hexyl butyrate,other_ester
+ethyl 3-hydroxybutyrate,other_ester
+ethyl propionate,other_ester
+ethyl methanoate,other_ester
+methyl hexanoate,other_ester
+ethyl hexanoate,other_ester
+hexyl hexanoate,other_ester
+methyl octanoate,other_ester
+ethyl octanoate,other_ester
+ethyl decanoate,other_ester
+ethyl trans-2-butenoate,other_ester
+ethyl lactate,other_ester
+diethyl succinate,other_ester
+methanol,alcohol
+ethanol,alcohol
+1-propanol,alcohol
+1-butanol,alcohol
+1-pentanol,alcohol
+1-hexanol,alcohol
+1-octanol,alcohol
+2-pentanol,alcohol
+3-methylbutanol,alcohol
+3-methyl-2-buten-1-ol,alcohol
+1-penten-3-ol,alcohol
+1-octen-3-ol,alcohol
+E2-hexenol,alcohol
+Z2-hexenol,alcohol
+E3-hexenol,alcohol
+Z3-hexenol,alcohol
+glycerol,alcohol
+"2,3-butanediol",alcohol
+acetaldehyde,aldehyde
+propanal,aldehyde
+butanal,aldehyde
+pentanal,aldehyde
+hexanal,aldehyde
+E2-hexenal,aldehyde
+furfural,aldehyde
+2-propenal,aldehyde
+acetone,ketone
+2-butanone,ketone
+2-pentanone,ketone
+2-heptanone,ketone
+6-methyl-5-hepten-2-one,ketone
+"2,3-butanedione",ketone
+terpinolene,terpene
+a -pinene,terpene
+b -pinene,terpene
+(1S)-(+)-3-carene,terpene
+limonene,terpene
+a-humulene,terpene
+b -myrcene,terpene
+(-)-trans-caryophyllene,terpene
+p-cymene,terpene
+geranyl acetate,terpene
+a -terpineol,terpene
+geraniol,terpene
+nerol,terpene
+linalool,terpene
+b-citronellol,terpene
+linalool oxide,terpene
+phenethyl alcohol,aromatic
+benzyl alcohol,aromatic
+methyl salicylate,aromatic
+methyl benzoate,aromatic
+ethyl benzoate,aromatic
+phenethyl acetate,aromatic
+benzaldehyde,aromatic
+phenylacetaldehyde,aromatic
+acetophenone,aromatic
+ethyl cinnamate,aromatic
+2-methylphenol,aromatic
+4-ethyl guaiacol,aromatic
+eugenol,aromatic
+g-butyrolactone,lactone
+g-hexalactone,lactone
+g-octalactone,lactone
+g-decalactone,lactone
+d-decalactone,lactone
+ammonium hydroxide,nitrogen_sulfur
+putrescine,nitrogen_sulfur
+cadaverine,nitrogen_sulfur
+3-methylthio-1-propanol,nitrogen_sulfur
+dimethyl sulfide,nitrogen_sulfur
