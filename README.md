@@ -13,8 +13,8 @@ Experimento: usar el cableado real de la vía olfativa de *Drosophila melanogast
 |---|---|
 | 1. Exploración de datos | Hecho ([notebook](notebooks/01_exploracion.ipynb)) |
 | 2. Subcircuito procesado (Parquet + tests) | Hecho |
-| 3. Datos de olores (Hallem y Carlson 2006) | Pendiente |
-| 4. Modelos | Pendiente |
+| 3. Datos de olores (Hallem y Carlson 2006) | Hecho |
+| 4. Modelos | En curso |
 | 5. Experimentos | Pendiente |
 | 6. Exportación a JSON | Pendiente |
 | 7. Visualizador web y despliegue | Pendiente |
@@ -45,6 +45,12 @@ Conexiones incluidas en esta versión: ORN→PN, ORN→LN, LN→ORN, LN→PN, LN
 - **Posición 3D:** mediana de los puntos marcados de cada neurona, en micras.
 - El `side` de las ORN es el lado de entrada del nervio; sus conexiones cruzan entre hemisferios porque proyectan a ambos lóbulos antenales.
 
+## Datos de olores y tarea
+- **Olores:** Tabla S1 de Hallem y Carlson (2006): 110 olores y 24 receptores. Se usan 23 receptores, que se casan con tipos de ORN de FlyWire por su glomérulo (Couto et al., 2005). Solo 1.121 de las 2.281 ORN (23 de 53 tipos) tienen dato de respuesta; el resto recibe solo actividad de fondo.
+- **10 clases químicas:** ácidos, acetatos, otros ésteres, alcoholes, aldehídos, cetonas, terpenos, aromáticos, lactonas y nitrógeno/azufre. Simplificaciones: los ésteres se dividieron en dos clases y las aminas se agruparon con los compuestos de azufre.
+- **Partición por olores:** los olores de prueba nunca aparecen en entrenamiento (77 de entrenamiento y 33 de prueba). Cada ejemplo es una respuesta con ruido gaussiano.
+- Con un clasificador trivial (comparar con el promedio de cada clase) la precisión es de 0,29 con 1 ejemplo por clase y 0,47 con 20 (azar 0,10).
+
 ## Estructura
 ```
 configs/      configuración de experimentos
@@ -63,4 +69,4 @@ Instrucciones por lenguaje: [Python](src/flyconn/README.md) · [Web](web/README.
 Datos: descarga de [FlyWire Codex](https://codex.flywire.ai/api/download) (requiere aceptar sus condiciones) los archivos `classification.csv.gz`, `connections_princeton.csv.gz`, `neurons.csv.gz`, `coordinates.csv.gz` y `consolidated_cell_types.csv.gz` en `data/raw/`.
 
 ## Datos, licencia y citas
-Los datos de FlyWire se usan bajo **CC BY-NC 4.0** (solo uso no comercial, con atribución) y los Terms of Service de FlyWire. Citas y detalles en [CITATIONS.md](CITATIONS.md). Cita obligatoria: Dorkenwald et al., 2024, *Nature*, y Schlegel et al., 2024, *Nature*. Codex: http://dx.doi.org/10.13140/RG.2.2.35928.67844. Respuestas de receptores: Hallem y Carlson, 2006, *Cell*.
+Los datos de FlyWire se usan bajo **CC BY-NC 4.0** (solo uso no comercial, con atribución) y los Terms of Service de FlyWire. Citas y detalles en [CITATIONS.md](CITATIONS.md). Cita obligatoria: Dorkenwald et al., 2024, *Nature*, y Schlegel et al., 2024, *Nature*. Codex: http://dx.doi.org/10.13140/RG.2.2.35928.67844. Respuestas de receptores: Hallem y Carlson, 2006, *Cell*. Mapa receptor→glomérulo: Couto, Alenius y Dickson, 2005, *Current Biology*.
