@@ -29,4 +29,16 @@ uv run pytest -q                      # los de data/processed se saltan si no ha
 - `data/circuit.py`: carga neuronas y aristas del subcircuito (capas y aristas permitidas).
 - `data/build.py`: poda de huérfanas, signos, posiciones y escritura de Parquet.
 
-Los pasos de modelos, entrenamiento y exportación (`train.py`, `evaluate.py`, `export.py`) se añadirán y documentarán aquí.
+- `data/hallem.py`: extrae la Tabla S1 de `data/raw/hallem_carlson/mmc1.pdf` (necesita `pdftotext`): `uv run python -m flyconn.data.hallem`.
+- `data/odors.py`: respuestas por ORN, partición few-shot por olores y generación de muestras con ruido.
+- `models/`: `MaskedLinear`, `ConnectomeNet` (variantes A/B y control barajado con `shuffle_spec`) y `DenseMLP`.
+
+Ejemplo de uso:
+```python
+from flyconn.models import load_spec, shuffle_spec, ConnectomeNet
+spec = load_spec()
+real = ConnectomeNet(spec, variant="B")
+control = ConnectomeNet(shuffle_spec(spec, seed=0), variant="B")
+```
+
+Los pasos de entrenamiento, entrenamiento y exportación (`train.py`, `evaluate.py`, `export.py`) se añadirán y documentarán aquí.
