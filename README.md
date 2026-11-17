@@ -51,6 +51,30 @@ Conexiones incluidas en esta versión: ORN→PN, ORN→LN, LN→ORN, LN→PN, LN
 - **Partición por olores:** los olores de prueba nunca aparecen en entrenamiento (77 de entrenamiento y 33 de prueba). Cada ejemplo es una respuesta con ruido gaussiano.
 - Con un clasificador trivial (comparar con el promedio de cada clase) la precisión es de 0,29 con 1 ejemplo por clase y 0,47 con 20 (azar 0,10).
 
+## Modelos que se comparan
+Las tres arquitecturas reciben lo mismo (la respuesta de los receptores a un olor) y clasifican en las mismas 10 clases químicas. Solo cambia cómo están conectadas las neuronas por dentro.
+
+| Modelo | Cableado | Parámetros entrenables |
+|---|---|---|
+| **Conectoma, variante A** | Real de FlyWire, pesos fijos proporcionales al nº de sinapsis. Solo se entrena KC→MBON y la capa de lectura (como en la mosca real, donde se aprende en esa etapa) | ~26.000 |
+| **Conectoma, variante B** | Real de FlyWire, todas las conexiones reales entrenables (respetando máscara y signos) | ~130.000 |
+| **Aleatorio, variantes A y B** | Mismas neuronas, signos y nº de conexiones por bloque, pero entre neuronas elegidas al azar | Igual que el conectoma correspondiente |
+| **MLP denso** | Todas las neuronas conectadas con todas, una capa oculta de 57 neuronas | ~130.000 |
+
+El aleatorio tiene los mismos parámetros que el conectoma: solo cambia a qué neurona se conecta cada una. Por eso mide lo que aporta el cableado concreto, y no la capacidad. En total hay 5 modelos entrenables: conectoma A, conectoma B, aleatorio A, aleatorio B y MLP.
+
+### Preguntas que responde el experimento
+1. **Conectoma B frente a aleatorio B:** ¿importa qué neurona se conecta con cuál (con todas las conexiones entrenables)?
+2. **Conectoma A frente a aleatorio A:** lo mismo, sin entrenar la estructura interna.
+3. **Conectoma B frente a MLP denso:** ¿ayuda una estructura biológica frente a una red genérica del mismo tamaño?
+4. **Variante A frente a B:** ¿hace falta entrenar el interior de la red, o basta con aprender la lectura?
+
+### Cómo está implementado (PyTorch)
+- `MaskedLinear`: capa lineal que solo tiene peso donde hay sinapsis real. El signo (excita/frena) viene de la neurona de origen y no cambia al entrenar; solo se aprende la magnitud.
+- `ConnectomeNet`: ORN → lóbulo antenal (3 pasos de tiempo, con inhibición de las neuronas locales) → PN → KC (solo el 5 % más activo, top-k) → MBON → capa lineal hacia las 10 clases (esta capa no existe en la mosca y la usan igual las tres redes). El control aleatorio es la misma clase con el cableado barajado.
+- `DenseMLP`: capa oculta de 57 neuronas, elegida para igualar los parámetros de la variante B.
+- Decisiones propias: pesos iniciales normalizados por neurona, 3 pasos de tiempo, top-k global entre los dos hemisferios, y el barajado no conserva el nº de conexiones de cada neurona.
+
 ## Estructura
 ```
 configs/      configuración de experimentos

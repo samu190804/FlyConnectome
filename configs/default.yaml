@@ -1,0 +1,14 @@
+# Configuración del experimento principal (uv run python -m flyconn.train --config configs/default.yaml)
+seeds: [0, 1, 2, 3, 4]          # cada semilla cambia: partición de olores, ruido, cableado barajado, init
+n_per_class: [1, 2, 5, 10, 20]  # ejemplos de entrenamiento por clase
+models: [connectome_A, connectome_B, random_A, random_B, mlp]
+noise_sd: 10.0                  # ruido de entrenamiento y prueba (espigas/s)
+test_noise_sd: [0.0, 5.0, 10.0, 20.0, 40.0]  # robustez: ruido en la prueba con la red ya entrenada
+test_samples_per_odor: 10
+epochs: 200                     # fijo (sin parada temprana: no hay conjunto de validación)
+lr: 0.01                        # por defecto
+lr_per_model: {mlp: 0.003}      # elegido en un piloto con semillas distintas (1000, 1001)
+weight_decay: 0.0
+n_steps: 3                      # pasos de tiempo del lóbulo antenal
+kc_active_frac: 0.05
+out_csv: results/main.csv
