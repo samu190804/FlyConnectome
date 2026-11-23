@@ -68,6 +68,7 @@ class ConnectomeNet(nn.Module):
     def forward(self, x: torch.Tensor, return_activity: bool = False):
         pn = x.new_zeros(x.shape[0], self.n_pn)
         ln = x.new_zeros(x.shape[0], self.n_ln)
+        steps = []  # actividad ORN/PN/LN en cada paso de tiempo (para la animación de la web)
         for _ in range(self.n_steps):  # lóbulo antenal desenrollado en el tiempo
             orn = torch.relu(x + self._l("LN", "ORN")(ln))  # inhibición presináptica de las ORN
             pn, ln = (
@@ -76,13 +77,14 @@ class ConnectomeNet(nn.Module):
                     self._l("ORN", "LN")(orn) + self._l("PN", "LN")(pn) + self._l("LN", "LN")(ln)
                 ),
             )
+            steps.append({"ORN": orn, "PN": pn, "LN": ln})
         kc = torch.relu(self._l("PN", "KC")(pn))
         thr = kc.topk(self.k, dim=1).values[:, -1:]  # dispersión: solo las k KC más activas
         kc = kc * (kc >= thr)
         mbon = torch.relu(self._l("KC", "MBON")(kc))
         logits = self.head(mbon)
         if return_activity:
-            return logits, {"ORN": orn, "PN": pn, "LN": ln, "KC": kc, "MBON": mbon}
+            return logits, {"ORN": orn, "PN": pn, "LN": ln, "KC": kc, "MBON": mbon, "steps": steps}
         return logits
 
     def n_trainable(self) -> int:

@@ -14,9 +14,9 @@ Experimento: usar el cableado real de la vía olfativa de *Drosophila melanogast
 | 1. Exploración de datos | Hecho ([notebook](notebooks/01_exploracion.ipynb)) |
 | 2. Subcircuito procesado (Parquet + tests) | Hecho |
 | 3. Datos de olores (Hallem y Carlson 2006) | Hecho |
-| 4. Modelos | En curso |
-| 5. Experimentos | Pendiente |
-| 6. Exportación a JSON | Pendiente |
+| 4. Modelos | Hecho |
+| 5. Experimentos | Hecho (15 semillas) |
+| 6. Exportación a JSON | Hecho |
 | 7. Visualizador web y despliegue | Pendiente |
 
 ## Circuito
@@ -50,6 +50,27 @@ Conexiones incluidas en esta versión: ORN→PN, ORN→LN, LN→ORN, LN→PN, LN
 - **10 clases químicas:** ácidos, acetatos, otros ésteres, alcoholes, aldehídos, cetonas, terpenos, aromáticos, lactonas y nitrógeno/azufre. Simplificaciones: los ésteres se dividieron en dos clases y las aminas se agruparon con los compuestos de azufre.
 - **Partición por olores:** los olores de prueba nunca aparecen en entrenamiento (77 de entrenamiento y 33 de prueba). Cada ejemplo es una respuesta con ruido gaussiano.
 - Con un clasificador trivial (comparar con el promedio de cada clase) la precisión es de 0,29 con 1 ejemplo por clase y 0,47 con 20 (azar 0,10).
+
+## Resultados
+Precisión en prueba con **olores no vistos** (media ± desviación sobre 15 semillas; cada semilla cambia la partición de olores, el ruido, el cableado barajado y la inicialización). Azar: 0,10. Ruido de prueba: 10 espigas/s. Datos en `results/all.csv`, resumen en `results/summary.csv`, gráficas en `results/learning_curve.png` y `results/noise_robustness.png`.
+
+| Modelo | 1 ej./clase | 2 | 5 | 10 | 20 |
+|---|---|---|---|---|---|
+| Conectoma A | 0,22 ± 0,09 | 0,32 ± 0,06 | 0,40 ± 0,07 | 0,48 ± 0,06 | 0,49 ± 0,07 |
+| Conectoma B | 0,26 ± 0,09 | 0,37 ± 0,08 | 0,45 ± 0,08 | 0,54 ± 0,07 | 0,54 ± 0,08 |
+| Aleatorio A | 0,30 ± 0,09 | 0,40 ± 0,06 | 0,47 ± 0,07 | 0,52 ± 0,06 | 0,52 ± 0,06 |
+| Aleatorio B | 0,29 ± 0,07 | 0,37 ± 0,08 | 0,48 ± 0,06 | 0,54 ± 0,08 | 0,56 ± 0,07 |
+| MLP denso | 0,34 ± 0,10 | 0,44 ± 0,06 | 0,52 ± 0,07 | 0,56 ± 0,07 | 0,57 ± 0,07 |
+
+**Lectura (resultado mayormente negativo):**
+- **Conectoma B frente a aleatorio B: empate.** La diferencia emparejada por semilla está entre −0,03 y +0,005, dentro del ruido. El cableado real no aporta precisión cuando se entrena toda la red.
+- **Conectoma A frente a aleatorio A: el conectoma queda por debajo** (de −0,08 con 1 ejemplo a −0,03 con 20). Con pesos fijos, el cableado real funciona peor que uno aleatorio.
+- **Conectoma B frente a MLP denso:** el MLP gana entre 2 y 8 puntos, con más claridad con pocos ejemplos.
+- **Entrenar el interior (B frente a A)** da unos 5 puntos.
+- **Robustez al ruido** (entrenados con 20 ejemplos, ruido de prueba 40): el conectoma A cae de 0,49 a 0,47, mientras que el aleatorio A cae de 0,54 a 0,37. Es lo único favorable al conectoma; el MLP y el conectoma B quedan igual (≈0,46).
+- Las diferencias de unos pocos puntos están dentro del ruido. No se ha corregido por comparaciones múltiples.
+
+**Limitaciones que condicionan la lectura:** la mitad de las ORN (30 de 53 tipos) no tiene datos de Hallem y recibe solo actividad de fondo; el conjunto de prueba son 33 olores; el barajado conserva el nº de conexiones por bloque y los signos, pero no el de cada neurona; y varias decisiones de diseño son propias (capa de lectura, normalización de pesos, 3 pasos de tiempo, top-k global, tasa de aprendizaje elegida con un piloto en semillas distintas).
 
 ## Modelos que se comparan
 Las tres arquitecturas reciben lo mismo (la respuesta de los receptores a un olor) y clasifican en las mismas 10 clases químicas. Solo cambia cómo están conectadas las neuronas por dentro.
