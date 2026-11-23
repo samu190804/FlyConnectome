@@ -1,0 +1,31 @@
+---
+import '../styles/global.css';
+const { title = 'Conectoma de la mosca' } = Astro.props;
+const nav = [['#cerebro', 'El cerebro'], ['#visor', 'Visor 3D'], ['#resultados', 'Resultados'], ['#limites', 'Límites'], ['#refs', 'Referencias']];
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <meta name="description" content="Una red neuronal con el cableado real del olfato de la mosca de la fruta, comparada con redes aleatorias y genéricas." />
+  </head>
+  <body>
+    <header class="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-b border-line bg-bg/95 px-4 py-3 backdrop-blur max-sm:static">
+      <a href="#inicio" class="font-display text-lg font-semibold !text-ink no-underline">Conectoma de la mosca</a>
+      <nav class="flex flex-wrap gap-x-5 text-sm">
+        {nav.map(([href, label]) => <a href={href} class="!text-mute no-underline hover:!text-ink hover:underline">{label}</a>)}
+      </nav>
+    </header>
+    <main><slot /></main>
+    <footer class="mx-auto max-w-5xl border-t border-line px-4 pb-12 pt-6 text-sm text-mute">
+      Experimento de arquitectura inspirado en el conectoma de FlyWire. No es un modelo biológico fiel.
+    </footer>
+    <script is:inline>
+      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>

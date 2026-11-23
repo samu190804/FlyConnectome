@@ -1,0 +1,33 @@
+---
+import { REGIONS } from '../lib/content.js';
+---
+<div class="grid items-start gap-8 md:grid-cols-2">
+  <div>
+    <p class="mb-3">El cerebro de una mosca adulta tiene cerca de 140.000 neuronas. El proyecto FlyWire ha reconstruido todas y cada una de sus conexiones (el <i>conectoma</i>), un plano de cableado completo.</p>
+    <p class="mb-3">Nosotros usamos dos zonas, resaltadas en el esquema: el <b>lóbulo antenal</b>, donde llega la señal de las antenas, y el <b>cuerpo fungiforme</b>, donde se aprenden los olores.</p>
+    <ul class="mt-4 divide-y divide-line border-y border-line">
+      {REGIONS.map(([name, desc, used]) => (
+        <li class:list={['py-1.5', used ? 'font-medium text-ink' : 'text-mute']}>
+          <b>{name}</b>: {desc}
+          {used && <span class="ml-1 rounded-sm bg-ink px-1.5 py-px text-[0.7rem] font-semibold uppercase tracking-wide text-bg">usada</span>}
+        </li>
+      ))}
+    </ul>
+  </div>
+  <figure>
+    <svg class="brain-map h-auto w-full rounded border border-line bg-panel" viewBox="0 0 360 300" role="img" aria-label="Esquema simplificado de las regiones del cerebro de la mosca">
+      <path class="brain" d="M180 24c-70 0-140 40-150 110-8 60 30 110 80 132 28 12 52 8 70-6 18 14 42 18 70 6 50-22 88-72 80-132C320 64 250 24 180 24z" />
+      <ellipse class="r" cx="62" cy="130" rx="36" ry="62" /><text x="62" y="130">ópticos</text>
+      <ellipse class="r" cx="298" cy="130" rx="36" ry="62" /><text x="298" y="130">ópticos</text>
+      <ellipse class="r r-mb" cx="132" cy="70" rx="30" ry="22" /><text x="132" y="74">cuerpo fungiforme</text>
+      <ellipse class="r r-mb" cx="228" cy="70" rx="30" ry="22" />
+      <ellipse class="r" cx="104" cy="112" rx="20" ry="14" /><text class="sm" x="104" y="128">cuerno lat.</text>
+      <ellipse class="r" cx="256" cy="112" rx="20" ry="14" />
+      <ellipse class="r" cx="180" cy="124" rx="34" ry="24" /><text x="180" y="128">complejo central</text>
+      <ellipse class="r r-al" cx="146" cy="186" rx="22" ry="22" /><text x="146" y="222">lóbulo antenal</text>
+      <ellipse class="r r-al" cx="214" cy="186" rx="22" ry="22" />
+      <ellipse class="r" cx="180" cy="248" rx="38" ry="16" /><text x="180" y="252">zona subesofágica</text>
+    </svg>
+    <figcaption class="mt-1.5 text-sm text-mute">Esquema simplificado, sin escala ni posiciones exactas. En color, las dos zonas que usa el proyecto.</figcaption>
+  </figure>
+</div>
