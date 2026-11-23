@@ -1,0 +1,54 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/fraunces";
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #e6eae8;      /* gris mineral */
+  --color-bg2: #d8dfdb;
+  --color-panel: #f4f6f5;
+  --color-line: #c3cdc8;
+  --color-ink: #0e1815;
+  --color-mute: #56635e;
+  --color-accent: #2447c9;  /* único color de acento: cobalto */
+  --color-ok: #3a7a4e;
+  --color-ko: #b23a3a;
+  --color-orn: #d99a2b;
+  --color-pn: #4a90c2;
+  --color-ln: #cf5b4b;
+  --color-kc: #8e6bbf;
+  --color-mbon: #4fa36b;
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-display: "Fraunces Variable", Georgia, serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; color-scheme: light; }
+  body { @apply bg-bg text-ink font-sans leading-relaxed; }
+  a { @apply text-accent underline underline-offset-2; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-accent; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+}
+
+h1, h2, h3, .font-display { font-family: var(--font-display); font-optical-sizing: auto; }
+.kicker { font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; color: var(--color-mute); }
+
+/* aparición suave al hacer scroll (solo si hay JavaScript) */
+.js .reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; transition-delay: var(--d, 0ms); }
+.js .reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .js .reveal { opacity: 1; transform: none; transition: none; } }
+
+.bar-fill { transition: width 1s cubic-bezier(.2,.8,.2,1); }
+
+/* Esquema del cerebro (SVG) */
+.brain-map .brain { fill: #f4f6f5; stroke: #9aa7a1; stroke-width: 1.5; }
+.brain-map .r { fill: #d3dbd7; stroke: #9aa7a1; }
+.brain-map .r-al { fill: #bcd6ea; stroke: var(--color-pn); stroke-width: 1.8; }
+.brain-map .r-mb { fill: #d9ccec; stroke: var(--color-kc); stroke-width: 1.8; }
+.brain-map text { fill: #26332e; font-size: 9.5px; text-anchor: middle; pointer-events: none; }
+.brain-map text.sm { font-size: 8px; }
+
+/* Gráficas SVG */
+.chart-grid { stroke: #d3dbd7; }
+.chart-chance { stroke: #7f8d87; stroke-dasharray: 2 4; }
+.chart-tick { fill: var(--color-mute); font-size: 14px; }
+.chart-axis { fill: #26332e; font-size: 15px; }
