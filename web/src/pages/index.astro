@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+import BrainMap from '../components/BrainMap.astro';
+import ViewerApp from '../components/ViewerApp.jsx';
+import Results from '../components/Results.jsx';
+import results from '../../public/data/results.json';
+import { REFERENCES, LAYER_COLOR } from '../lib/content.js';
+
+const stats = [['8.175', 'neuronas reales'], ['129.600', 'conexiones'], ['53', 'tipos de receptor'], ['110', 'olores medidos']];
+const pipeline = [
+  { c: LAYER_COLOR.ORN, name: 'Receptores', tag: 'ORN', text: 'Las antenas detectan moléculas. Cada receptor tiene su olor favorito y cada olor activa varios a la vez.', ml: 'el vector de entrada' },
+  { c: LAYER_COLOR.PN, name: 'Lóbulo antenal', tag: 'PN · LN', text: 'Las neuronas de proyección pasan el mensaje; las locales lo frenan para que un olor se reconozca aunque sea más o menos intenso.', ml: 'una normalización' },
+  { c: LAYER_COLOR.KC, name: 'Células de Kenyon', tag: 'KC', text: 'Miles de neuronas, de las que solo un 5 % se enciende. Cada olor deja una firma única.', ml: 'una proyección dispersa' },
+  { c: LAYER_COLOR.MBON, name: 'Neuronas de salida', tag: 'MBON', text: 'Leen la firma y deciden. Aquí es donde la mosca real aprende a acercarse o alejarse.', ml: 'un clasificador lineal' },
+];
+const why = [
+  'Es una cadena casi lineal de entrada a salida: receptores → lóbulo antenal → células de Kenyon → neuronas de salida.',
+  'Tiene un tamaño manejable: unas 8.000 neuronas y 130.000 conexiones entre los dos hemisferios.',
+  'Tiene una tarea natural de clasificación: reconocer olores.',
+  'Hay datos reales de cómo responden los receptores a 110 olores (Hallem y Carlson, 2006).',
+  'Se sabe dónde aprende la mosca: en las conexiones entre las células de Kenyon y las neuronas de salida.',
+];
+const limits = [
+  'El modelo usa neuronas de <b>tasa</b> (no de disparo) y simplifica la dopamina y la plasticidad.',
+  'Solo 23 de los 53 tipos de receptor tienen datos reales de respuesta; el resto recibe solo ruido de fondo.',
+  'La prueba usa 33 olores. Diferencias de pocos puntos están dentro del ruido.',
+  'El control aleatorio conserva el número de conexiones por bloque y los signos, pero no el de cada neurona.',
+  'Varias decisiones de diseño son nuestras (capa final de lectura, normalización de pesos, 3 pasos de tiempo).',
+];
+const h2 = 'mb-3 text-[clamp(1.8rem,3.6vw,2.6rem)] font-semibold leading-tight tracking-tight';
+const wrap = 'mx-auto max-w-5xl px-4';
+---
+<Base>
+  <section id="inicio" class={`${wrap} pb-14 pt-16 sm:pt-24`}>
+    <p class="kicker reveal mb-5">Un experimento con el cerebro de una mosca</p>
+    <h1 class="reveal mb-6 max-w-4xl text-[clamp(2.4rem,6vw,4.4rem)] font-semibold leading-[1.05] tracking-tight" style="--d:60ms">
+      8.175 neuronas de mosca.<br /><em class="font-normal text-accent">¿Pueden enseñar algo a una IA?</em>
+    </h1>
+    <p class="reveal max-w-2xl text-lg text-[#26332e]" style="--d:120ms">
+      Cogimos el cableado real del olfato de la mosca de la fruta, lo convertimos en una red neuronal y la pusimos a prueba contra el azar y contra una red genérica. <b>Spoiler:</b> el resultado no es el que esperábamos.
+    </p>
+    <div class="reveal mt-8 flex flex-wrap gap-3" style="--d:180ms">
+      <a href="#visor" class="rounded bg-ink px-5 py-2.5 font-medium !text-bg no-underline transition hover:bg-accent">Ver el cerebro en 3D</a>
+      <a href="#resultados" class="rounded border border-ink px-5 py-2.5 font-medium !text-ink no-underline transition hover:bg-ink hover:!text-bg">¿Gana el cableado real?</a>
+    </div>
+    <dl class="reveal mt-14 grid grid-cols-2 border-y border-line sm:grid-cols-4" style="--d:240ms">
+      {stats.map(([n, l]) => (
+        <div class="border-line px-1 py-5 sm:border-l sm:pl-5 sm:first:border-l-0 sm:first:pl-1">
+          <dt class="font-display text-4xl font-semibold tracking-tight">{n}</dt>
+          <dd class="text-sm text-mute">{l}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="mt-6 max-w-2xl text-sm text-mute">Es un experimento de arquitectura <b>inspirado</b> en el conectoma, no una simulación fiel de la mosca.</p>
+  </section>
+
+  <section id="cerebro" class={`${wrap} border-t border-line py-16`}>
+    <p class="kicker reveal mb-2">01 · Anatomía</p>
+    <h2 class={`${h2} reveal font-display`}>Un cerebro del tamaño de una semilla, cableado neurona a neurona</h2>
+    <div class="reveal mt-6"><BrainMap /></div>
+
+    <h3 class="font-display reveal mb-4 mt-14 text-2xl font-semibold">El viaje de un olor, en cuatro paradas</h3>
+    <ol class="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+      {pipeline.map((s, i) => (
+        <li class="reveal" style={`--d:${i * 80}ms`}>
+          <div class="mb-3 h-[3px] w-full" style={`background:${s.c}`}></div>
+          <div class="font-display text-3xl font-semibold" style={`color:${s.c}`}>{i + 1}</div>
+          <div class="font-display text-lg font-semibold">{s.name}</div>
+          <div class="kicker mb-2">{s.tag}</div>
+          <p class="mb-2 text-[0.93rem]">{s.text}</p>
+          <p class="text-sm italic text-mute">En aprendizaje automático: {s.ml}.</p>
+        </li>
+      ))}
+    </ol>
+
+    <h3 class="font-display reveal mb-2 mt-14 text-2xl font-semibold">¿Por qué este circuito?</h3>
+    <ul class="reveal list-disc pl-5">{why.map((t) => <li class="my-1.5">{t}</li>)}</ul>
+    <p class="reveal mt-3">Además, se ha descrito que las conexiones del lóbulo antenal a las células de Kenyon son casi aleatorias, con algunos sesgos. Por eso la comparación con un cableado barajado es la <b>pregunta central</b> del experimento.</p>
+  </section>
+
+  <section id="visor" class="border-t border-line">
+    <div class="mx-auto max-w-[1280px] px-4 py-16">
+      <p class="kicker reveal mb-2">02 · Visor 3D</p>
+      <h2 class={`${h2} reveal font-display`}>Mira cómo una molécula se convierte en una decisión</h2>
+      <p class="reveal mb-6 max-w-3xl text-mute">Cada punto es una neurona real, colocada donde está en el cerebro. Elige un olor, pulsa reproducir y sigue la señal. Arrastra para girar y rueda para acercar.</p>
+      <div class="reveal"><ViewerApp client:only="react" /></div>
+    </div>
+  </section>
+
+  <section id="resultados" class={`${wrap} border-t border-line py-16`}>
+    <p class="kicker reveal mb-2">03 · Resultados</p>
+    <h2 class={`${h2} reveal font-display`}>¿Gana el cableado real?</h2>
+    <p class="reveal mb-6 max-w-3xl text-mute">Cinco redes, la misma tarea: clasificar un olor en una de 10 familias químicas viendo pocos ejemplos. La prueba usa <b>olores que la red no ha visto</b>.</p>
+    <Results results={results} client:visible />
+  </section>
+
+  <section id="limites" class={`${wrap} border-t border-line py-16`}>
+    <p class="kicker reveal mb-2">04 · Honestidad</p>
+    <h2 class={`${h2} reveal font-display`}>Lo que este experimento no dice</h2>
+    <ul class="mt-4 divide-y divide-line border-y border-line">
+      {limits.map((t) => <li class="reveal py-3 text-[0.97rem]" set:html={t} />)}
+    </ul>
+  </section>
+
+  <section id="refs" class={`${wrap} border-t border-line py-16`}>
+    <h2 class={`${h2} reveal font-display`}>Referencias</h2>
+    <ol class="reveal list-decimal pl-5">{REFERENCES.map(([t, u]) => <li class="my-1.5"><a href={u} target="_blank" rel="noopener">{t}</a></li>)}</ol>
+    <p class="mt-4 text-sm text-mute">Los datos del conectoma son de FlyWire y se usan bajo la licencia <b>CC BY-NC 4.0</b> (solo uso no comercial, con atribución). Revisa las cifras del texto con las fuentes antes de citarlas.</p>
+  </section>
+</Base>
