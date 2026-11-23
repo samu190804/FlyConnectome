@@ -1,0 +1,12 @@
+# Despliegue en Netlify: usar "web" como Base directory (o dejar este archivo en la raíz del sitio).
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"   # Astro 7 requiere Node >= 22.23
+
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
