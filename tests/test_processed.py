@@ -53,3 +53,11 @@ def test_sin_huerfanas_y_con_posicion(nodes, edges):
     post = set(edges.post_idx)
     assert nodes[(nodes.layer != "ORN") & ~nodes.idx.isin(post)].empty
     assert nodes[["x_um", "y_um", "z_um"]].notna().all().all()
+
+
+def test_posiciones_en_micras_de_cerebro_real(nodes):
+    # El subcircuito (lóbulos antenales + cuerpos fungiformes) ocupa la parte central de un cerebro
+    # de ~700 x 290 x 235 µm. Si la unidad fuera incorrecta, esto saldría 4-40 veces mayor.
+    q = nodes[["x_um", "y_um", "z_um"]]
+    span = q.quantile(0.99) - q.quantile(0.01)
+    assert ((span > 100) & (span < 700)).all(), span.to_dict()

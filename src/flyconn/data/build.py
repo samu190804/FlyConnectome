@@ -14,7 +14,9 @@ from .circuit import RAW, load_edges, load_neurons
 
 PROCESSED = Path("data/processed")
 LAYERS = ["ORN", "PN", "LN", "KC", "MBON"]
-VOXEL_NM = np.array([4.0, 4.0, 40.0])  # tamaño de vóxel de FlyWire en nm
+# Las coordenadas de Codex (coordinates.csv) están en nanómetros. Comprobado: con esta unidad el
+# cerebro mide ~710 x 290 x 235 µm (tamaño real); suponer vóxeles de 4x4x40 nm lo estiraba 4, 4 y 40 veces.
+NM_PER_UNIT = np.array([1.0, 1.0, 1.0])
 
 
 def assign_sign(neurons: pd.DataFrame) -> pd.Series:
@@ -55,7 +57,7 @@ def load_positions(raw: Path = RAW) -> pd.DataFrame:
     """Posición por neurona en micras: mediana de sus puntos marcados."""
     co = pd.read_csv(raw / "coordinates.csv.gz")
     xyz = co.position.str.strip("[]").str.split(expand=True).astype(float).to_numpy()
-    co[["x_um", "y_um", "z_um"]] = xyz * VOXEL_NM / 1000.0
+    co[["x_um", "y_um", "z_um"]] = xyz * NM_PER_UNIT / 1000.0
     return co.groupby("root_id")[["x_um", "y_um", "z_um"]].median().reset_index()
 
 
