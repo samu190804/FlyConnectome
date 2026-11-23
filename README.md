@@ -155,7 +155,7 @@ Los datos de FlyWire se usan bajo **CC BY-NC 4.0** (solo uso no comercial, con a
 
 Citas obligatorias: Dorkenwald et al., 2024, *Nature*, y Schlegel et al., 2024, *Nature*. Además se citan Zheng et al. 2018, Yu et al. 2025 (sinapsis), Eckstein, Bates et al. 2024 (neurotransmisores) y Codex. Respuestas de receptores: Hallem y Carlson, 2006, *Cell*. Mapa receptor→glomérulo: Couto, Alenius y Dickson, 2005, *Current Biology*. Lista completa con enlaces en [CITATIONS.md](CITATIONS.md).
 
-El código de este repositorio aún no tiene licencia asignada.
+**Código:** licencia [MIT](LICENSE). **Datos:** los datos de FlyWire y los JSON derivados (`web/public/data/`) siguen bajo CC BY-NC 4.0 (solo uso no comercial, con atribución); la licencia MIT del código no los cubre.
 
 ## Qué queda por hacer
 - Desplegar la web en Netlify.

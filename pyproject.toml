@@ -3,6 +3,7 @@ name = "flyconn"
 version = "0.1.0"
 description = "Conectoma de la mosca (FlyWire) como arquitectura de red neuronal"
 requires-python = ">=3.11"
+license = "MIT"
 dependencies = ["numpy", "pandas", "pyarrow", "torch", "matplotlib", "pyyaml"]
 
 [dependency-groups]
